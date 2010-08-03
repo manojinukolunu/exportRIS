@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components xmlns:scr="http://www.osgi.org/xmlns/scr/v1.0.0">
+    <scr:component enabled="true" name="org.sakaiproject.nakamura.exportRIS.ExportRIS">
+        <implementation class="org.sakaiproject.nakamura.exportRIS.ExportRIS"/>
+        <service servicefactory="false">
+            <provide interface="javax.servlet.Servlet"/>
+        </service>
+        <property name="sling.servlet.paths" value="/citations"/>
+        <property name="sling.servlet.extensions" value="ris"/>
+        <property name="sling.servlet.methods" value="GET"/>
+        <property name="service.pid" value="org.sakaiproject.nakamura.exportRIS.ExportRIS"/>
+    </scr:component>
+</components>

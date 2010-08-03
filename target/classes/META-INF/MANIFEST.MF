@@ -1,0 +1,29 @@
+Manifest-Version: 1.0
+Service-Component: OSGI-INF/serviceComponents.xml
+Export-Package: org.sakaiproject.nakamura.exportRIS;uses:="javax.jcr,o
+ rg.apache.sling.api.servlets,javax.servlet,org.sakaiproject.nakamura.
+ api.personal,org.apache.jackrabbit.api.security.user,org.apache.sling
+ .jcr.base.util,org.apache.sling.api,org.apache.sling.api.resource"
+Built-By: Administrator
+Bundle-Category: sakai-nakamura
+Tool: Bnd-0.0.357
+Bundle-Name: Sakai Nakamura :: exportRIS
+Created-By: Apache Maven Bundle Plugin
+Bundle-Vendor: The Sakai Foundation
+DynamicImport-Package: sun.misc.*
+Build-Jdk: 1.6.0_14
+Bundle-Version: 0.7.0.SNAPSHOT
+Bnd-LastModified: 1280856261616
+Embed-Transitive: true
+Bundle-ManifestVersion: 2
+Bundle-Description: Me service to provide information on the current u
+ ser.
+Import-Package: javax.jcr;version="2.0",javax.servlet,org.apache.jackr
+ abbit.api.security.user;version="2.0",org.apache.sling.api;version="2
+ .0",org.apache.sling.api.resource;version="2.0",org.apache.sling.api.
+ servlets;version="2.0",org.apache.sling.jcr.base.util;version="2.1",o
+ rg.sakaiproject.nakamura.api.personal,org.sakaiproject.nakamura.expor
+ tRIS
+Bundle-SymbolicName: org.sakaiproject.nakamura.exportRIS
+Bundle-DocURL: http://groups.google.com/group/sakai-nakamura
+
