@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-@SlingServlet(methods = "GET", paths = "/var/citations")
+@SlingServlet(methods = "GET", paths = "/citations")
 @Properties(value = {
     @Property(name = "service.description", value = "Perfoms searchs for citations."),
     @Property(name = "service.vendor", value = "The Sakai Foundation") })
