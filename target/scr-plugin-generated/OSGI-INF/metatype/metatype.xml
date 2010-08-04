@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.0.0" localization="OSGI-INF/metatype/metatype">
-    <OCD id="org.sakaiproject.nakamura.exportRIS.ExportRIS" name="%org.sakaiproject.nakamura.exportRIS.ExportRIS.name" description="%org.sakaiproject.nakamura.exportRIS.ExportRIS.description">
-        <AD id="sling.servlet.paths" type="String" default="/citations" name="%sling.servlet.paths.name" description="%sling.servlet.paths.description"/>
+<?xml version="1.0" encoding="UTF-8"?><metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.0.0" localization="OSGI-INF/metatype/metatype">
+    <OCD id="org.sakaiproject.nakamura.exportRIS.CitationServlet" name="%org.sakaiproject.nakamura.exportRIS.CitationServlet.name" description="%org.sakaiproject.nakamura.exportRIS.CitationServlet.description">
+        <AD id="sling.servlet.resourceTypes" type="String" default="sakai/citation" name="%sling.servlet.resourceTypes.name" description="%sling.servlet.resourceTypes.description"/>
         <AD id="sling.servlet.extensions" type="String" default="ris" name="%sling.servlet.extensions.name" description="%sling.servlet.extensions.description"/>
         <AD id="sling.servlet.methods" type="String" default="GET" name="%sling.servlet.methods.name" description="%sling.servlet.methods.description"/>
     </OCD>
-    <Designate pid="org.sakaiproject.nakamura.exportRIS.ExportRIS">
-        <Object ocdref="org.sakaiproject.nakamura.exportRIS.ExportRIS"/>
+    <Designate pid="org.sakaiproject.nakamura.exportRIS.CitationServlet">
+        <Object ocdref="org.sakaiproject.nakamura.exportRIS.CitationServlet"/>
     </Designate>
 </metatype:MetaData>
