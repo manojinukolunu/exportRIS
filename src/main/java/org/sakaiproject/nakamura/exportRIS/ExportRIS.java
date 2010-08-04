@@ -27,7 +27,7 @@ import org.apache.jackrabbit.api.security.user.UserManager;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.ValueMap;
-import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
+import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.jcr.base.util.AccessControlUtil;
@@ -42,6 +42,7 @@ import org.sakaiproject.nakamura.util.ExtendedJSONWriter;
 import org.sakaiproject.nakamura.util.PathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.Scanner;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -53,7 +54,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
-
+import java.io.*;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
@@ -62,8 +63,8 @@ import javax.jcr.Value;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
-@SlingServlet(methods = { "GET" }, paths = { "/citations" }, extensions = "ris")
-public class ExportRIS extends SlingSafeMethodsServlet {
+@SlingServlet(methods = { "GET","POST" }, paths = { "/citations" },extensions={"ris"})
+public class ExportRIS extends SlingAllMethodsServlet {
   /**
    *
    */
@@ -91,10 +92,11 @@ public class ExportRIS extends SlingSafeMethodsServlet {
       // /_user/a/admin/public/citataiondata not required same as above
 		//resp.getWriter().write(citationData.getPath()+"\n");
       //int i;
-	  
+	  resp.getWriter().flush();
       for (NodeIterator entries = citationData.getNodes(); entries.hasNext();) {
+		resp.getWriter().flush();
         Node entry = entries.nextNode();
-        resp.getWriter().write(entry.getName()+"\n");
+        //resp.getWriter().write(entry.getName()+"\n");
         resp.getWriter().write("UR "+entry.getProperty("UR").getString());
 		resp.getWriter().write("\n");
         resp.getWriter().write("TL "+entry.getProperty("TL").getString());
@@ -111,5 +113,39 @@ public class ExportRIS extends SlingSafeMethodsServlet {
     }
 
   }
+  
+   protected void doPost(SlingHttpServletRequest req, SlingHttpServletResponse resp)
+      throws ServletException, IOException {
+	  try{
+			resp.setContentType("text/html");
+			InputStream file =req.getRequestParameter("myfile").getInputStream();
+			Scanner scanner=new Scanner(file);
+			while (scanner.hasNextLine())
+			{
+				processLine(scanner.nextLine(),resp);
+			}
+	  }
+	  catch(Exception e){
+		resp.getWriter().write("asd");
+	  }
+	  
+	  }
+	  
+	  protected void processLine(String line,SlingHttpServletResponse resp)
+	  {
+	  try{
+		Scanner scanner =new Scanner(line);
+		if ( scanner.hasNext() ){
+		String name = scanner.next();
+		String value = scanner.next();
+		resp.getWriter().write(name+"\n"+"<br>");
+		}
+	   }
+	   catch(Exception e)
+	   {
+	   }
+		
+	  }
+	  
 }
 

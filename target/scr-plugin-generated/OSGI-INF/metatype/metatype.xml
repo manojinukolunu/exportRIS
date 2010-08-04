@@ -3,7 +3,7 @@
     <OCD id="org.sakaiproject.nakamura.exportRIS.ExportRIS" name="%org.sakaiproject.nakamura.exportRIS.ExportRIS.name" description="%org.sakaiproject.nakamura.exportRIS.ExportRIS.description">
         <AD id="sling.servlet.paths" type="String" default="/citations" name="%sling.servlet.paths.name" description="%sling.servlet.paths.description"/>
         <AD id="sling.servlet.extensions" type="String" default="ris" name="%sling.servlet.extensions.name" description="%sling.servlet.extensions.description"/>
-        <AD id="sling.servlet.methods" type="String" default="GET" name="%sling.servlet.methods.name" description="%sling.servlet.methods.description"/>
+        <AD id="sling.servlet.methods" type="String" default="GET,POST" name="%sling.servlet.methods.name" description="%sling.servlet.methods.description" cardinality="2147483647"/>
     </OCD>
     <Designate pid="org.sakaiproject.nakamura.exportRIS.ExportRIS">
         <Object ocdref="org.sakaiproject.nakamura.exportRIS.ExportRIS"/>

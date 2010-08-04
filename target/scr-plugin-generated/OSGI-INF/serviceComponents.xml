@@ -7,7 +7,10 @@
         </service>
         <property name="sling.servlet.paths" value="/citations"/>
         <property name="sling.servlet.extensions" value="ris"/>
-        <property name="sling.servlet.methods" value="GET"/>
+        <property name="sling.servlet.methods">
+            GET
+            POST
+        </property>
         <property name="service.pid" value="org.sakaiproject.nakamura.exportRIS.ExportRIS"/>
     </scr:component>
 </components>
