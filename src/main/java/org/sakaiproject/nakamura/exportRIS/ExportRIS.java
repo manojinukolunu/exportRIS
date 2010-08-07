@@ -42,7 +42,6 @@ import org.sakaiproject.nakamura.util.ExtendedJSONWriter;
 import org.sakaiproject.nakamura.util.PathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.Scanner;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -54,7 +53,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
-import java.io.*;
+
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
@@ -62,8 +61,14 @@ import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryManager;
+import javax.jcr.query.QueryResult;
+import java.io.*;
+import java.util.*;
 
-@SlingServlet(methods = { "GET","POST" }, paths = { "/citations" },extensions={"ris"})
+
+@SlingServlet(methods = { "GET","POST" }, paths = { "/citations" }, extensions = "ris")
 public class ExportRIS extends SlingAllMethodsServlet {
   /**
    *
@@ -80,7 +85,7 @@ public class ExportRIS extends SlingAllMethodsServlet {
     try {
       resp.setContentType("application/octet-stream");
       resp.setCharacterEncoding("UTF-8");
-      
+     
       Session session = req.getResourceResolver().adaptTo(Session.class);
       UserManager um = AccessControlUtil.getUserManager(session);
       Authorizable au = um.getAuthorizable(session.getUserID());
@@ -90,22 +95,21 @@ public class ExportRIS extends SlingAllMethodsServlet {
       Node citationData = (Node) session.getItem(citationDataPath);
       // Node citation = session.getNode(absPath);//absPath will be like
       // /_user/a/admin/public/citataiondata not required same as above
-		//resp.getWriter().write(citationData.getPath()+"\n");
+        //resp.getWriter().write(citationData.getPath()+"\n");
       //int i;
-	  resp.getWriter().flush();
+     
       for (NodeIterator entries = citationData.getNodes(); entries.hasNext();) {
-		resp.getWriter().flush();
         Node entry = entries.nextNode();
-        //resp.getWriter().write(entry.getName()+"\n");
+        resp.getWriter().write(entry.getName()+"\n");
         resp.getWriter().write("UR "+entry.getProperty("UR").getString());
-		resp.getWriter().write("\n");
+        resp.getWriter().write("\n");
         resp.getWriter().write("TL "+entry.getProperty("TL").getString());
-		resp.getWriter().write("\n");
-		resp.getWriter().write("TY "+entry.getProperty("TY").getString());
-		resp.getWriter().write("\n");
-		resp.getWriter().write("ER \n");
-		//resp.getWriter().write(entry.getPath()+"\n");
-		resp.getWriter().flush();
+        resp.getWriter().write("\n");
+        resp.getWriter().write("TY "+entry.getProperty("TY").getString());
+        resp.getWriter().write("\n");
+        resp.getWriter().write("ER \n");
+        //resp.getWriter().write(entry.getPath()+"\n");
+        resp.getWriter().flush();
       }
 
     } catch (Exception e) {
@@ -113,39 +117,146 @@ public class ExportRIS extends SlingAllMethodsServlet {
     }
 
   }
-  
-   protected void doPost(SlingHttpServletRequest req, SlingHttpServletResponse resp)
+ 
+  //This will get the citations from the imported citations file and add to the public path of the logged in user
+  protected void doPost(SlingHttpServletRequest req, SlingHttpServletResponse resp)
       throws ServletException, IOException {
-	  try{
-			resp.setContentType("text/html");
-			InputStream file =req.getRequestParameter("myfile").getInputStream();
-			Scanner scanner=new Scanner(file);
-			while (scanner.hasNextLine())
-			{
-				processLine(scanner.nextLine(),resp);
-			}
-	  }
-	  catch(Exception e){
-		resp.getWriter().write("asd");
-	  }
-	  
-	  }
-	  
-	  protected void processLine(String line,SlingHttpServletResponse resp)
-	  {
-	  try{
-		Scanner scanner =new Scanner(line);
-		if ( scanner.hasNext() ){
-		String name = scanner.next();
-		String value = scanner.next();
-		resp.getWriter().write(name+"\n"+"<br>");
-		}
-	   }
-	   catch(Exception e)
-	   {
-	   }
-		
-	  }
-	  
+	 // String nameOfFinalNode = null;
+        try{
+            int countIndex=0;
+             Session session = req.getResourceResolver().adaptTo(Session.class);
+              UserManager um = AccessControlUtil.getUserManager(session);
+              Authorizable au = um.getAuthorizable(session.getUserID());
+              String citationDataPath = PersonalUtils.getPublicPath(au) + "/citationdata";
+
+              // PrintWriter w = response.getWriter();
+              Node citationData = (Node) session.getItem(citationDataPath);//get the public path node
+              for(NodeIterator iter=citationData.getNodes();iter.hasNext();){
+            	  iter.next();
+            	  countIndex++;//holds the number of nodes in the citation data
+              }
+            InputStream in = req.getRequestParameter("myfile").getInputStream();
+            
+            
+            Scanner scanner=new Scanner(in);//scan the inputstream
+             while (scanner.hasNextLine()){
+            	String nextLine=scanner.nextLine();
+            	String nextLine1=nextLine.trim();
+            	if(nextLine1.equals("")&&scanner.hasNextLine()){
+            		nextLine=scanner.nextLine();
+            		
+            	}
+            	else if(!scanner.hasNextLine()){
+            		break;
+            	}
+            	//get the nextline of from the uploaded file
+            	try {
+            		ArrayList<String> lineal= processLine(nextLine);//get the two tokens from the scanner and store in an arraylist
+                	ArrayList<String> citation=new ArrayList<String>();
+                	String name1=" ";
+                	//resp.getWriter().write(name1);
+                	//name1.trim();
+                	
+                	while(!(name1.equals("ER"))){
+                		citation.add(lineal.get(0));
+                		if(name1.equals("ER")){
+                			break;
+                		}
+                    	citation.add(lineal.get(1));
+                    	lineal = processLine(scanner.nextLine());
+                    	name1=lineal.get(0).trim();
+                   	
+                    	
+                	}
+                	
+                    if(countIndex!= 1){
+                    	String s = "" + countIndex;
+            			Node addedNode=citationData.addNode(s);
+            			addedNode.setProperty("sling:resourceType","sakai:citation");
+            			for(int i=0;i<citation.size();i++)
+            			{
+            				if(i==citation.size()){
+            					break;
+            				}
+            				String name=citation.get(i).trim();
+            				if(i==citation.size()){
+            					break;
+            				}
+            				String value=citation.get(i+1).trim();
+            				addedNode.setProperty(name,value);
+            				
+            				i++;
+            				
+            			}
+            			countIndex++;
+            			session.save();
+                    	}
+                    else if(countIndex==1){
+                    	String s = "" + countIndex;
+            			Node addedNode=citationData.addNode(s);
+            			addedNode.setProperty("sling:resourceType","sakai:citation");
+            			for(int i=0;i<citation.size();i++)
+            			{
+            				if(i==citation.size()){
+            					break;
+            				}
+            				String name=citation.get(i).trim();
+            				if(i==citation.size()){
+            					break;
+            				}
+            				String value=citation.get(i+1).trim();
+            				addedNode.setProperty(name,value);
+            				i++;
+            				
+            			}
+            			countIndex++;
+            			session.save();
+                    	}
+                   } 
+            	catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }
+             resp.getWriter().write("Citations Added");
+            }
+            catch(RepositoryException re){
+            	throw new ServletException(re.getMessage(), re);
+            }
+           
+
 }
 
+    public ArrayList<String> processLine(String line){
+    	try{
+    		Scanner scanner=new Scanner(line);//process each line
+    		String name = null;
+    		String value = null;
+    		if(scanner.hasNext()){
+    			scanner.useDelimiter(" - ");//extract the contents of the file before and after  - 
+            	name=scanner.next();//name has the UR ,TL etc
+            	String comparer="ER ";
+            if(name.equals(comparer)){
+            	//resp.getWriter().write("end Reached<br/>");
+            }
+            else
+            {
+            	value=scanner.next(); //values of UR ,TL etc
+            	
+            }
+           
+    		}
+    		ArrayList<String> al=new ArrayList<String>();
+    		al.add(name);
+    		al.add(value);
+    		return al;
+    	}
+      catch(Exception e)
+      {
+    	e.printStackTrace();
+      }
+		return null;
+      }
+    
+   
+}

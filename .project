@@ -20,4 +20,21 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.maven.ide.eclipse.maven2Nature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>exportRIS</name>
+			<type>2</type>
+			<location>C:/opt/sakai/nakamura/bundles/exportRIS/src/main/java/org/sakaiproject/nakamura/exportRIS</location>
+		</link>
+	</linkedResources>
+	<variableList>
+		<variable>
+			<name>ExportRIS</name>
+			<value>file:/C:/opt/sakai/nakamura/bundles/exportRIS/src/main/java/org/sakaiproject/nakamura/exportRIS/ExportRIS.java</value>
+		</variable>
+		<variable>
+			<name>exportRIS</name>
+			<value>file:/C:/opt/sakai/nakamura/bundles/exportRIS/target/org.sakaiproject.nakamura.exportRIS-0.7-SNAPSHOT.jar</value>
+		</variable>
+	</variableList>
 </projectDescription>

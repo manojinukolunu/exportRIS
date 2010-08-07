@@ -13,4 +13,13 @@
         </property>
         <property name="service.pid" value="org.sakaiproject.nakamura.exportRIS.ExportRIS"/>
     </scr:component>
+    <scr:component enabled="true" name="org.sakaiproject.nakamura.exportRIS.SearchCitations">
+        <implementation class="org.sakaiproject.nakamura.exportRIS.SearchCitations"/>
+        <service servicefactory="false">
+            <provide interface="javax.servlet.Servlet"/>
+        </service>
+        <property name="sling.servlet.paths" value="/citationsSearch"/>
+        <property name="sling.servlet.methods" value="GET"/>
+        <property name="service.pid" value="org.sakaiproject.nakamura.exportRIS.SearchCitations"/>
+    </scr:component>
 </components>
