@@ -4,7 +4,7 @@ Export-Package: org.sakaiproject.nakamura.api.exportRIS;uses:="javax.j
  cr",org.sakaiproject.nakamura.exportRIS;uses:="javax.jcr,org.apache.s
  ling.api.request,org.apache.sling.api.resource,org.apache.sling.api.s
  ervlets,javax.servlet,org.sakaiproject.nakamura.api.personal,org.apac
- he.sling.jcr.base.util,org.apache.jackrabbit.api.security.user,org.ap
+ he.jackrabbit.api.security.user,org.apache.sling.jcr.base.util,org.ap
  ache.sling.api,javax.jcr.query,org.sakaiproject.nakamura.util,org.apa
  che.sling.commons.json.io"
 Built-By: Administrator
@@ -15,7 +15,7 @@ Created-By: Apache Maven Bundle Plugin
 Bundle-Vendor: The Sakai Foundation
 Build-Jdk: 1.6.0_14
 Bundle-Version: 0.7.0.SNAPSHOT
-Bnd-LastModified: 1281203620421
+Bnd-LastModified: 1281251146625
 Embed-Transitive: true
 Bundle-ManifestVersion: 2
 Bundle-Description: Me service to provide information on the current u

@@ -83,21 +83,24 @@ public class ExportRIS extends SlingAllMethodsServlet {
      * it directly.
      */
     try {
-      resp.setContentType("application/octet-stream");
+      resp.setContentType("application/octet-stream");//For writing data to  file directly
       resp.setCharacterEncoding("UTF-8");
      
-      Session session = req.getResourceResolver().adaptTo(Session.class);
+      Session session = req.getResourceResolver().adaptTo(Session.class);//get the current session of the current logged in user
       UserManager um = AccessControlUtil.getUserManager(session);
       Authorizable au = um.getAuthorizable(session.getUserID());
-      String citationDataPath = PersonalUtils.getPublicPath(au) + "/citationdata";
-
+      String citationDataPath = PersonalUtils.getPublicPath(au) + "/citationdata";//The public citationdatapath 
+		//TODO must add private citations to this too
       // PrintWriter w = response.getWriter();
-      Node citationData = (Node) session.getItem(citationDataPath);
+      Node citationData = (Node) session.getItem(citationDataPath);//get the the node given by citaitondatapath
       // Node citation = session.getNode(absPath);//absPath will be like
       // /_user/a/admin/public/citataiondata not required same as above
         //resp.getWriter().write(citationData.getPath()+"\n");
       //int i;
      
+	 
+	 //Iterate over the chid nodes of the citationdatapath and write the items to the file 
+	 //TO be completed 
       for (NodeIterator entries = citationData.getNodes(); entries.hasNext();) {
         Node entry = entries.nextNode();
         resp.getWriter().write(entry.getName()+"\n");
@@ -123,7 +126,7 @@ public class ExportRIS extends SlingAllMethodsServlet {
       throws ServletException, IOException {
 	 // String nameOfFinalNode = null;
         try{
-            int countIndex=0;
+            int countIndex=0;//holds the number of child nodes of citationdatapath
              Session session = req.getResourceResolver().adaptTo(Session.class);
               UserManager um = AccessControlUtil.getUserManager(session);
               Authorizable au = um.getAuthorizable(session.getUserID());
@@ -135,12 +138,15 @@ public class ExportRIS extends SlingAllMethodsServlet {
             	  iter.next();
             	  countIndex++;//holds the number of nodes in the citation data
               }
+			  //the file inputstream
             InputStream in = req.getRequestParameter("myfile").getInputStream();
             
             
             Scanner scanner=new Scanner(in);//scan the inputstream
              while (scanner.hasNextLine()){
-            	String nextLine=scanner.nextLine();
+            	String nextLine=scanner.nextLine();//get the line
+				
+				//if the line is an empty line move past it to the nexLIne if 2 empty lines are encountered it means the end of file is reached so break
             	String nextLine1=nextLine.trim();
             	if(nextLine1.equals("")&&scanner.hasNextLine()){
             		nextLine=scanner.nextLine();
@@ -152,11 +158,13 @@ public class ExportRIS extends SlingAllMethodsServlet {
             	//get the nextline of from the uploaded file
             	try {
             		ArrayList<String> lineal= processLine(nextLine);//get the two tokens from the scanner and store in an arraylist
-                	ArrayList<String> citation=new ArrayList<String>();
-                	String name1=" ";
+                	ArrayList<String> citation=new ArrayList<String>();//this stores one citaiton each time to create a node
+                	String name1=" ";//used to delimit the citations
                 	//resp.getWriter().write(name1);
                 	//name1.trim();
                 	
+					
+					//Add the properties into citations ArrayList
                 	while(!(name1.equals("ER"))){
                 		citation.add(lineal.get(0));
                 		if(name1.equals("ER")){
@@ -169,6 +177,7 @@ public class ExportRIS extends SlingAllMethodsServlet {
                     	
                 	}
                 	
+					//Create the nodes after the current node
                     if(countIndex!= 1){
                     	String s = "" + countIndex;
             			Node addedNode=citationData.addNode(s);
@@ -226,7 +235,7 @@ public class ExportRIS extends SlingAllMethodsServlet {
            
 
 }
-
+	
     public ArrayList<String> processLine(String line){
     	try{
     		Scanner scanner=new Scanner(line);//process each line
