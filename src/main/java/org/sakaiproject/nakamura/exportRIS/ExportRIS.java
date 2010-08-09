@@ -246,23 +246,26 @@ public class ExportRIS extends SlingAllMethodsServlet {
     		Scanner scanner=new Scanner(line);//process each line
     		String name = null;
     		String value = null;
+    		ArrayList<String> al=new ArrayList<String>();
     		if(scanner.hasNext()){
     			scanner.useDelimiter(" - ");//extract the contents of the file before and after  - 
             	name=scanner.next();//name has the UR ,TL etc
-            	String comparer="ER ";
-            if(name.equals(comparer)){
-            	//resp.getWriter().write("end Reached<br/>");
-            }
-            else
-            {
-            	value=scanner.next(); //values of UR ,TL etc
+            	String nameER=name.trim();
+            	if(nameER.equals("ER")){
+            		al.add(name);
+            	}
+            	else{
+            		value=scanner.next();
+            		al.add(name);
+            		al.add(value);
+            	}
+            	 //values of UR ,TL etc
             	
-            }
+            
            
     		}
-    		ArrayList<String> al=new ArrayList<String>();
-    		al.add(name);
-    		al.add(value);
+    		
+    		
     		return al;
     	}
       catch(Exception e)

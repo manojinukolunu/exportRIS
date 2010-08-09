@@ -15,7 +15,7 @@ Created-By: Apache Maven Bundle Plugin
 Bundle-Vendor: The Sakai Foundation
 Build-Jdk: 1.6.0_14
 Bundle-Version: 0.7.0.SNAPSHOT
-Bnd-LastModified: 1281289689796
+Bnd-LastModified: 1281385997390
 Embed-Transitive: true
 Bundle-ManifestVersion: 2
 Bundle-Description: Me service to provide information on the current u

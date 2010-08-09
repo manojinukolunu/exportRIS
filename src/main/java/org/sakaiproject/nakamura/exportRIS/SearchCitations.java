@@ -38,6 +38,8 @@ import java.util.TimeZone;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.Property;
+import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
@@ -69,18 +71,25 @@ public class SearchCitations extends SlingAllMethodsServlet{
 
 		        QueryResult result = query.execute();//execute the query
 		        //NodeIterator iter=result.getNodes();//get the nodes in the result and iterate over them.
-		        PrintWriter w = resp.getWriter();
-				ExtendedJSONWriter writer=new ExtendedJSONWriter(w);
-		        writer.object();
+		       
+				
 		        for(NodeIterator iter=result.getNodes();iter.hasNext();){
+		        	PrintWriter w = resp.getWriter();
+					ExtendedJSONWriter writer=new ExtendedJSONWriter(w);
+		        	writer.object();
 		        	Node entry=iter.nextNode();
 		        	numberOfNodes++;
-		        	
-		        	ExtendedJSONWriter.writeNodeContentsToWriter(writer, entry);
+		        	for(PropertyIterator propiter=entry.getProperties();propiter.hasNext();){
+		        		Property prop = propiter.nextProperty();
+		        		writer.key(prop.getName());
+		        		writer.value(prop.getString());
+		        	}
+					writer.endObject();
 		        	
 		        }
+		       
 		        
-		        writer.endObject();
+		        
 		        //resp.getWriter().write("asd");
 		}
 		catch(Exception e){
