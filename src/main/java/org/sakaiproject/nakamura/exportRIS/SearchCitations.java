@@ -71,23 +71,38 @@ public class SearchCitations extends SlingAllMethodsServlet{
 
 		        QueryResult result = query.execute();//execute the query
 		        //NodeIterator iter=result.getNodes();//get the nodes in the result and iterate over them.
-		       
-				
+		       PrintWriter w = resp.getWriter();
+		       ExtendedJSONWriter writer=new ExtendedJSONWriter(w);
+		       writer.object();
+		       String names=null;
 		        for(NodeIterator iter=result.getNodes();iter.hasNext();){
-		        	PrintWriter w = resp.getWriter();
-					ExtendedJSONWriter writer=new ExtendedJSONWriter(w);
-		        	writer.object();
+		        	
+		        	
 		        	Node entry=iter.nextNode();
 		        	numberOfNodes++;
+					
+		        	writer.key(entry.getName());
+		        	writer.object();
 		        	for(PropertyIterator propiter=entry.getProperties();propiter.hasNext();){
+		        		
 		        		Property prop = propiter.nextProperty();
-		        		writer.key(prop.getName());
-		        		writer.value(prop.getString());
+		        		names=prop.getString();
+		        		if (names.contains("/"))
+		        		{
+		        			names.replaceAll("/", " ");
+		        		}
+		        		writer.key(prop.getName()).value(names);
+		        		
 		        	}
-					writer.endObject();
+		        	writer.endObject();
+		        	
+					
 		        	
 		        }
 		       
+		        writer.key("Number Of Nodes").value(numberOfNodes+"");
+		        
+		        writer.endObject();
 		        
 		        
 		        //resp.getWriter().write("asd");

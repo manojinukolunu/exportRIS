@@ -153,16 +153,23 @@ public class ExportRIS extends SlingAllMethodsServlet {
             
             
             Scanner scanner=new Scanner(in);//scan the inputstream
+            
+            OUT:
              while (scanner.hasNextLine()){
             	String nextLine=scanner.nextLine();
-            	String nextLine1=nextLine.trim();
-            	if(nextLine1.equals("")&&scanner.hasNextLine()){
-            		nextLine=scanner.nextLine();
-            		
-            	}
-            	else if(!scanner.hasNextLine()){
-            		break;
-            	}
+            	String nextLine1=null;
+            	
+            	
+            		nextLine1=nextLine.trim();
+            		if(nextLine1.equals("")&&scanner.hasNextLine()){
+                		nextLine=scanner.nextLine();
+                		
+                	}
+                	else if(!scanner.hasNextLine()){
+                		break OUT;
+                	}
+            	
+            	
             	//get the nextline of from the uploaded file
             	try {
             		ArrayList<String> lineal= processLine(nextLine);//get the two tokens from the scanner and store in an arraylist
